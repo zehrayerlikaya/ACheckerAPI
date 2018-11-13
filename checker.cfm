@@ -11,7 +11,7 @@
 --->
 <cfoutput>
 <cfif isdefined("form.check")>
-	<cfhttp url="https://achecker.ca/checkacc.php?uri=#form.uri#&id=ca19cea64becd610d59bbe9e5d385db02296bd2c&output=rest&guide=STANCA,WCAG2-AA&offset=10" useragent="Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/533.7 (KHTML, like Gecko) Chrome/5.0.391.0 Safari/533.7" result="httpResponse" redirect="false">
+	<cfhttp url="https://achecker.ca/checkacc.php?uri=#form.uri#&id=ca19cea64becd610d59bbe9e5d385db02296bd2c&output=html&guide=#form.guide#&offset=10" useragent="Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/533.7 (KHTML, like Gecko) Chrome/5.0.391.0 Safari/533.7" result="httpResponse" redirect="false">
 		<cfhttpparam type="header" name="HTTP_REFERER" value="http://example.com/feed/" >
 		<cfhttpparam type="header" name="Accept-Encoding" value="gzip,deflate,sdch" >
 		<cfhttpparam type="header" name="Proxy-Connection" value="keep-alive" >
@@ -20,11 +20,11 @@
 		<cfhttpparam type="header" name="Accept-Charset" value="ISO-8859-1,utf-8;q=0.7,*;q=0.3">
 		<cfhttpparam type="cookie" name="some-cookie" value="1">
 	</cfhttp>
-	
-	<cfset content = XMLParse(httpResponse.fileContent)><!--- HTTP isteði ile alýnan XML dosyanýn içeriðini parse ediyor. --->
+	<cfset content = httpResponse.fileContent>
+	<!---<cfset content = XMLParse(httpResponse.fileContent)><!--- HTTP isteði ile alýnan XML dosyanýn içeriðini parse ediyor. --->
 	Hata Sayýsý: #content.resultset.summary.NumOfErrors.XmlText#<br />
 	Muhtemel Problemler: #content.resultset.summary.NumOfLikelyProblems.XmlText#<br />
-	Potensiyel Problemler: #content.resultset.summary.NumOfPotentialProblems.XmlText#<br />
-	<!---<cfdump var="#content#">--->
+	Potensiyel Problemler: #content.resultset.summary.NumOfPotentialProblems.XmlText#<br />--->
+	#content#
 </cfif>
 </cfoutput>

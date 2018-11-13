@@ -7,32 +7,25 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
 <script>
+	function ajaxReq(page, uri, guide, fill){
+		$.ajax({
+			type		: "POST",
+			url			: page+".cfm",
+			data		: "uri="+uri+"&guide="+guide+"&check=true",
+			beforeSend	: function(){$("div#"+fill).html('<div align="center"> <img src="/KOUBS/CommonFiles/images/loader.gif" width="200" style="margin: auto;"></div>').show();},
+			error		: function() {$("div#"+fill).html('Hata.. Ýþlem sayfasýna eriþilemedi\n Lütfen tekrar deneyiniz...').show();},
+			success 	: function(Sonuc) {
+											$("div#"+fill).html(Sonuc).show();													
+										  }
+		});
+	}
+	
 	$(function(){
 		$("#check").click(function() {
-			//var SayfaBul = $(this).attr('name');
 			var uri = $("#uri").val();
-			alert(uri);
-			$.ajax({
-				type		: "POST",
-				url			: "source.cfm",
-				data		: "uri="+uri+"&check=true",
-				beforeSend	: function(){$("div#kaynak").html('<div align="center"> <img src="/KOUBS/CommonFiles/images/loader.gif" width="200" style="margin: auto;"></div>').show();},
-				error		: function() {$("div#kaynak").html('Hata.. Ýþlem sayfasýna eriþilemedi\n Lütfen tekrar deneyiniz...').show();},
-				success 	: function(Sonuc) {
-												$("div#kaynak").html(Sonuc).show();													
-											  }
-			});
-			
-			$.ajax({
-				type		: "POST",
-				url			: "checker.cfm",
-				data		: "uri="+uri+"&check=true",
-				beforeSend	: function(){$("div#sonuc").html('<div align="center"> <img src="/KOUBS/CommonFiles/images/loader.gif" width="200" style="margin: auto;"></div>').show();},
-				error		: function() {$("div#sonuc").html('Hata.. Ýþlem sayfasýna eriþilemedi\n Lütfen tekrar deneyiniz...').show();},
-				success 	: function(Sonuc) {
-												$("div#sonuc").html(Sonuc).show();													
-											  }
-			});
+			var guide = $("#guide").val();
+			ajaxReq("source", uri, guide, "kaynak");
+			ajaxReq("checker", uri, guide, "sonuc");
 		});
 	});
 </script>
@@ -43,6 +36,11 @@
 		<cfparam name="form.uri" default="http://www.google.com">
 		<form id="frm">
 			<input type="text" name="uri" id="uri" placeholder="http://www.google.com"/>
+			<select name="guide" id="guide">
+				<option value="WCAG2-A">WCAG2-A</option>
+				<option value="WCAG2-AA">WCAG2-AA</option>
+				<option value="WCAG2-AAA">WCAG2-AAA</option>
+			</select>
 			<button name="check" id="check" onclick="return false;">Check</button>
 		</form>
 		<br />
